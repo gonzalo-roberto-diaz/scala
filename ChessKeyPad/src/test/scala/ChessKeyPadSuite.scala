@@ -207,6 +207,8 @@ class ChessKeyPadSuite extends FunSuite {
     parents.contains(PointNode(Point(1, -1), Nil))
     parents.contains(PointNode(Point(0, 0), Nil))
     parents.contains(PointNode(Point(0, 2), Nil))
+    //test
+
   }
 
   test("non-repeating level-2 parents of a rook in a corner of a 2x2 board should return the opposite corner") {

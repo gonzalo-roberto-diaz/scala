@@ -1,0 +1,26 @@
+  /**
+    * extracts the first valid closed parenthesis group from a string, starting from the left
+    * @param chars
+    * @return the position of the last character of the left substring + 1
+    *         or -1 if no parentheses found
+    *         or -2 if unbalanced parentheses
+    */
+  def extractValid(chars: List[Char]) : Int = {
+
+    /**
+      * @param chars
+      * @return the position of the first open parenthesis char
+      *         -1 if none found
+      *         -2 if the first thing found is a closed parenthesis instead
+      */
+    def firstOpen(chars: List[Char]): Int ={
+      var ret =  -1
+      var position = 0
+      while (ret == -1 && position < chars.size ){
+        val current = chars(position)
+        if (current == '(' ) ret = position
+        else if  (current == ')') ret = -2
+        else  position +=1
+      }
+      ret
+    }

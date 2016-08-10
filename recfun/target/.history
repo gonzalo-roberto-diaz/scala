@@ -1,0 +1,86 @@
+compile
+test
+run
+submit gonzalo_diaz@yahoo.com   /**
+    * extracts the first valid closed parenthesis group from a string, starting from the left
+    * @param chars
+    * @return the position of the last character of the left substring + 1
+    *         or -1 if no parentheses found
+    *         or -2 if unbalanced parentheses
+    */
+  def extractValid(chars: List[Char]) : Int = {
+    /**
+      * @param chars
+      * @return the position of the first open parenthesis char
+      *         -1 if none found
+      *         -2 if the first thing found is a closed parenthesis instead
+      */
+    def firstOpen(chars: List[Char]): Int ={
+      var ret =  -1
+      var position = 0
+      while (ret == -1 && position < chars.size ){
+        val current = chars(position)
+        if (current == '(' ) ret = position
+        else if  (current == ')') ret = -2
+        else  position +=1
+      }
+      ret
+    }
+    val firstOp = firstOpen(chars)
+    if (firstOp == -1 || firstOp == -2) return firstOp
+    var start = firstOp + 1
+    var acc = 1
+    do{
+      val current = chars(start)
+      if (current == '(') acc +=1
+      if (current == ')') acc -=1
+      start +=1
+    }while(start < chars.size && acc !=0)
+    if (acc == 0) start else -2
+submit gonzalo_diaz@yahoo.com   /**
+    * extracts the first valid closed parenthesis group from a string, starting from the left
+    * @param chars
+    * @return the position of the last character of the left substring + 1
+    *         or -1 if no parentheses found
+    *         or -2 if unbalanced parentheses
+    */
+  def extractValid(chars: List[Char]) : Int = {
+    /**
+      * @param chars
+      * @return the position of the first open parenthesis char
+      *         -1 if none found
+      *         -2 if the first thing found is a closed parenthesis instead
+      */
+    def firstOpen(chars: List[Char]): Int ={
+      var ret =  -1
+      var position = 0
+      while (ret == -1 && position < chars.size ){
+        val current = chars(position)
+        if (current == '(' ) ret = position
+        else if  (current == ')') ret = -2
+        else  position +=1
+      }
+      ret
+    }
+    val firstOp = firstOpen(chars)
+    if (firstOp == -1 || firstOp == -2) return firstOp
+    var start = firstOp + 1
+    var acc = 1
+    do{
+      val current = chars(start)
+      if (current == '(') acc +=1
+      if (current == ')') acc -=1
+      start +=1
+    }while(start < chars.size && acc !=0)
+    if (acc == 0) start else -2
+  compile
+compile
+test
+submit gonzalo_diaz@yahoo.com JyWtZizy2QhbwIjz
+compile
+test
+compile
+test
+compile
+test
+submit gonzalo_diaz@yahoo.com qIVbTC41VL5Y8IZQ

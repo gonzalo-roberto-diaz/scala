@@ -1,5 +1,5 @@
 /**
-  * Created by gonzalodiaz on 8/10/16.
+  * A way to represent multiple, optional heads sharing the same tail
   */
 case class Hydra(heads: List[Point], tail: List[Point]){
   def applyPoints(points: List[Point], withRepetition: Boolean): List[Hydra] = {

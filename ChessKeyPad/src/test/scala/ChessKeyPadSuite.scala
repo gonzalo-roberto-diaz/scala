@@ -133,6 +133,36 @@ class ChessKeyPadSuite extends FunSuite {
     assert(result == List(r1, r2))
   }
 
+  test("apply repeated points to a MultiHeadList with non-unary tail, non-unary head, without repetition") {
+    val a = Point(0, 0)
+    val b = Point(1, 1)
+    val c = Point(2, 2)
+    val d = Point(3, 3)
+    val e = Point(4, 4)
+
+    val mhList = Hydra(List(a, b), List(c, d))
+    val parentPoints = List(a, c, e)
+    val result = mhList.applyPoints(parentPoints, false)
+    val r1 = Hydra(List(e), List(a, c, d))
+    val r2 = Hydra(List(e), List(b, c, d))
+    assert(result == List(r1, r2))
+  }
+
+  test("apply repeated points to a MultiHeadList with non-unary tail, non-unary head, with repetition") {
+    val a = Point(0, 0)
+    val b = Point(1, 1)
+    val c = Point(2, 2)
+    val d = Point(3, 3)
+    val e = Point(4, 4)
+
+    val mhList = Hydra(List(a, b), List(c, d))
+    val parentPoints = List(a, c, e)
+    val result = mhList.applyPoints(parentPoints, true)
+    val r1 = Hydra(List(a, c, e), List(a, c, d))
+    val r2 = Hydra(List(a, c, e), List(b, c, d))
+    assert(result == List(r1, r2))
+  }
+
 
 
   private def createKnight(): Piece ={

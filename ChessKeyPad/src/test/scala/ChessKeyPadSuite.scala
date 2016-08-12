@@ -1,7 +1,7 @@
-import ChessKeyPad.{PointNode, _}
 import org.scalatest.FunSuite
 import org.junit.runner.RunWith
 import org.scalatest.junit.JUnitRunner
+import ChessKeyPad._
 
 @RunWith(classOf[JUnitRunner])
 class ChessKeyPadSuite extends FunSuite {
@@ -105,83 +105,35 @@ class ChessKeyPadSuite extends FunSuite {
     assert(resMoves.contains(Point(2, -2)))
   }
 
-  test("create a parent PointNode from a PointNode with empty children lists") {
-    val start = PointNode(Point(1, 2), Nil)
-    val point = Point(3, 4)
-    val result = start.createParent(point)
-    assert(result.childrenLists == List(List(start)))
+  test("apply points to a MultiHeadList with empty tail unary head, without repetition") {
+    val a = Point(0, 0)
+    val b = Point(1, 1)
+    val c = Point(2, 2)
+
+    val mhList = Hydra(List(a), Nil)
+    val parentPoints = List(b, c)
+    val result = mhList.applyPoints(parentPoints, false)
+    val r1 = Hydra(List(b, c), List(a))
+    assert(result == List(r1))
   }
 
-  test("create a parent PointNode from a PointNode with one children list") {
-    val dummy = PointNode(Point(0, 0), Nil)
-    val start = PointNode(Point(1, 2), List(List(dummy)))
-    val point = Point(3, 4)
-    val result = start.createParent(point)
-    assert(result.value == point)
-    assert(result.childrenLists == List(List(start.withoutList(), dummy.withoutList())))
+  test("apply points to a MultiHeadList with non-unary tail, non-unary head, without repetition") {
+    val a = Point(0, 0)
+    val b = Point(1, 1)
+    val c = Point(2, 2)
+    val d = Point(3, 3)
+    val e = Point(4, 4)
+    val f = Point(5, 5)
+
+    val mhList = Hydra(List(a, b), List(c, d))
+    val parentPoints = List(e, f)
+    val result = mhList.applyPoints(parentPoints, false)
+    val r1 = Hydra(List(e, f), List(a, c, d))
+    val r2 = Hydra(List(e, f), List(b, c, d))
+    assert(result == List(r1, r2))
   }
 
-  test("create a parent PointNode from a PointNode with multiple children lists") {
-    val dummy0 = PointNode(Point(0, 0), Nil)
-    val dummy1 = PointNode(Point(1, 1), List(List(dummy0)))
-    val dummy2 = PointNode(Point(2, 2), Nil)
-    val start = PointNode(Point(8, 8), List(List(dummy1, dummy2), List(dummy1, dummy2)))
-    val point = Point(3, 4)
-    val result = start.createParent(point)
-    assert(result.value == point)
-    assert(result.childrenLists == List(List(start.withoutList(), dummy1.withoutList(), dummy2.withoutList()), List(start.withoutList(), dummy1.withoutList(), dummy2.withoutList())))
-  }
 
-  test("node not containing a point anywhere, should allow it as parent for non-repeatables") {
-    val dummy1 = PointNode(Point(0, 0), Nil)
-    val dummy2 = PointNode(Point(0, 0), Nil)
-    val start = PointNode(Point(1, 2), List(List(dummy1, dummy2), List(dummy1, dummy2)))
-    val point = Point(3, 4)
-    assert(start.allowedAsParentForNonRepeatables(point))
-  }
-
-  test("node containing a point as value, should not allow it as parent for non-repeatables") {
-    val dummy1 = PointNode(Point(0, 0), Nil)
-    val dummy2 = PointNode(Point(0, 0), Nil)
-    val start = PointNode(Point(3, 4), List(List(dummy1, dummy2), List(dummy1, dummy2)))
-    val point = Point(3, 4)
-    assert(!start.allowedAsParentForNonRepeatables(point))
-  }
-
-  test("node containing a point as value of any list item, should not allow it as parent for non-repeatables") {
-    val dummy1 = PointNode(Point(0, 0), Nil)
-    val dummy2 = PointNode(Point(1, 2), Nil)
-    val start = PointNode(Point(3, 4), List(List(dummy1, dummy2), List(dummy1, dummy2)))
-    val point = Point(0, 0)
-    assert(!start.allowedAsParentForNonRepeatables(point))
-  }
-
-  test("merging 2 nodes") {
-    val dummy1 = PointNode(Point(1, 1), Nil)
-    val dummy2 = PointNode(Point(2, 2), Nil)
-    val dummy3 = PointNode(Point(3, 3), Nil)
-    val dummy4 = PointNode(Point(4, 4), Nil)
-    val one = PointNode(Point(0, 0), List(List(dummy1, dummy2)))
-    val two = PointNode(Point(0, 0), List(List(dummy3, dummy4)))
-    val res = one.merge(two)
-    assert(res.value == Point(0, 0))
-    assert(res.childrenLists == List(List(dummy1, dummy2), List(dummy3, dummy4)))
-  }
-
-  test("merging nodes in a value-orderer PointNode list containing some equal values") {
-    val dummy1 = PointNode(Point(1, 1), Nil)
-    val dummy2 = PointNode(Point(2, 2), Nil)
-    val dummy3 = PointNode(Point(3, 3), Nil)
-    val dummy4 = PointNode(Point(4, 4), Nil)
-    val dummy5 = PointNode(Point(5, 5), Nil)
-    val one = PointNode(Point(0, 0), List(List(dummy1, dummy2)))
-    val two = PointNode(Point(0, 0), List(List(dummy3, dummy4)))
-    val three = PointNode(Point(8, 8), List(List(dummy5)))
-    val res =  mergeEqualValues(List(one, two, three))
-    assert(res.size == 2)
-    assert(res.head.value == Point(0, 0))
-    assert(res.head.childrenLists == List(List(dummy1, dummy2), List(dummy3, dummy4)))
-  }
 
   private def createKnight(): Piece ={
     val knightMov = MovAbility(Point(1, 2), false, true, true, false, true)
@@ -198,27 +150,6 @@ class ChessKeyPadSuite extends FunSuite {
     Piece("rook", List(mov))
   }
 
-  test("non-repeating parents of 2 bishop destinations at the bottom corner of a 3x3 board") {
-    val board= Board(createCleanSquareBoard(3), Nil)
-    val ends = List(PointNode(Point(0, -2), Nil), PointNode(Point(2, -2), Nil))
-    val bishop = createBishop()
-    val parents = superLevel(board, bishop, ends, false)
-    assert(parents.size == 3)
-    parents.contains(PointNode(Point(1, -1), Nil))
-    parents.contains(PointNode(Point(0, 0), Nil))
-    parents.contains(PointNode(Point(0, 2), Nil))
-    //test
-
-  }
-
-  test("non-repeating level-2 parents of a rook in a corner of a 2x2 board should return the opposite corner") {
-    val board= Board(createCleanSquareBoard(2), Nil)
-    val ends = List(PointNode(Point(0, -1), Nil))
-    val rook = createRook()
-    val parents = superLevelOrder(board, rook, ends, false, 2)
-    assert(parents.size == 1)
-    parents.contains(PointNode(Point(1, 0), Nil))
-  }
 
 
 

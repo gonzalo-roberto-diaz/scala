@@ -56,6 +56,22 @@ object ChessKeyPad {
     }
   }
 
+
+
+  def processHydra(hydra: Hydra, board: Board, piece: Piece, withRepetition: Boolean): List[Hydra] ={
+    var resHydras: List[Hydra] = Nil;
+    for (point <- hydra.heads){
+      var destinations = piece.getDestinations(board, point);
+      if (!withRepetition) {
+        destinations = destinations diff hydra.heads
+        destinations = destinations diff hydra.tail
+      }
+      if (destinations != Nil)
+        resHydras = resHydras ::: List(Hydra(destinations, point :: hydra.tail))
+    }
+    resHydras
+  }
+
 //  def superLevel(board: Board, piece: Piece, initial: List[PointNode], canRepeat: Boolean): List[PointNode] = {
 //    var parents: List[PointNode] = Nil
 //    for (node <- initial) {

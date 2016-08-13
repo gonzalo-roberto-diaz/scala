@@ -163,6 +163,46 @@ class ChessKeyPadSuite extends FunSuite {
     assert(result == List(r1, r2))
   }
 
+  test("process a hydra without repetitions") {
+    val a = Point(0, 0)
+    val b = Point(1, 0)
+    val c = Point(2, 0)
+    val d = Point(0, -1)
+    val e = Point(1, -1)
+    val f = Point(2, -1)
+    val g = Point(0, -2)
+    val h = Point(1, -2)
+    val i = Point(2, -2)
+
+    val board = Board(createCleanSquareBoard(3), List());
+    val bishop = createBishop();
+    val hydra = Hydra(List(a, c), List(e, g))
+
+    val res = processHydra(hydra, board, bishop, false)
+
+    assert(res == List(Hydra(List(i),List(a, e, g))))
+  }
+
+  test("process a hydra with repetitions") {
+    val a = Point(0, 0)
+    val b = Point(1, 0)
+    val c = Point(2, 0)
+    val d = Point(0, -1)
+    val e = Point(1, -1)
+    val f = Point(2, -1)
+    val g = Point(0, -2)
+    val h = Point(1, -2)
+    val i = Point(2, -2)
+
+    val board = Board(createCleanSquareBoard(3), List());
+    val bishop = createBishop();
+    val hydra = Hydra(List(a, c), List(e, g))
+
+    val res = processHydra(hydra, board, bishop, true)
+
+    assert(res == List(Hydra(List(e, i),List(a, e, g)), Hydra(List(e, g), List(c, e, g))))
+  }
+
 
 
   private def createKnight(): Piece ={

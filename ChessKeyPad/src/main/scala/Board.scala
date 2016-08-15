@@ -1,5 +1,6 @@
 /**
-  * Created by gonzalodiaz on 8/10/16.
+  * A bi-dimensional board of String values, represented by a List of Lists. The "forbidden" values can't be the
+  * destination of any movement.
   */
 case class Board(cells: List[List[String]], forbiddenValues: List[String]){
   def issInside(point: Point): Boolean = {
@@ -11,7 +12,8 @@ case class Board(cells: List[List[String]], forbiddenValues: List[String]){
   }
 
   /**
-    * given in mathematical coordinates  from top left (x always positive, y always negative)
+    * The String value of a given cell, given in mathematical coordinates assuming that the
+    * top left is (0, 0). This means that x should always be positive, and y should always be negative.
     * @param x
     * @param y
     * @return
@@ -20,6 +22,9 @@ case class Board(cells: List[List[String]], forbiddenValues: List[String]){
 
   def valueOf(point: Point): String = this.valueOf(point.x, point.y)
 
+  /**
+    * @return the geometrical Points of the list of lists, less those containing "forbidden" values
+    */
   def getPoints: List[Point] = {
     var points: List[Point] = List();
     for (matrixY <- 0 to cells.length-1){

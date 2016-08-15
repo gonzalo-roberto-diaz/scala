@@ -1,10 +1,21 @@
-var board: List[List[String]] = List()
 
-def create7x7Board: List[List[String]] = {
-  val vec =for (y <- 0 to 7) yield List.tabulate(7)(x=> f"$x $y")
-  vec.toList
+
+
+import scala.collection.mutable._
+
+def fun[T](): Unit = {
+  val leafRecs = Map[Int, ListBuffer[Rec[T]]]()
+
+  val newRec = Rec[T](ListBuffer(), Nil)
+  var leavesOfThatIndex = leafRecs.getOrElse(3, ListBuffer())
+  leavesOfThatIndex.append(newRec)
+
 }
 
-create7x7Board
+fun[String]()
+
+
+
+
 
 

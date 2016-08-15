@@ -1,8 +1,4 @@
-
-/**
-  * Created by gonzalodiaz on 8/13/16.
-  */
-case class Piece(name: String, movAbilities: List[MovAbility]) extends VectorToPoint{
+case class Piece(name: String, movAbilities: List[MovAbility]) extends PointOperations{
 
 
   /**
@@ -23,6 +19,5 @@ case class Piece(name: String, movAbilities: List[MovAbility]) extends VectorToP
     twoDList.flatten
   }
 
-
-
 }
+

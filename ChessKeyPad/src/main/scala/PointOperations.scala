@@ -1,10 +1,13 @@
+import scala.collection.mutable.ListBuffer
+
 /**
   * This trait includes some vector and point operations that don't really belong to any specific class in terms of
   * "compilation unit", and whcih I want to test independently.
   */
-trait  VectorToPoint {
+trait  PointOperations {
 
   type Move = Point
+
 
   def applyVectorToPoint(board: Board, origin: Point, vector: Move, repeatable: Boolean): List[Point] = {
 
@@ -37,5 +40,16 @@ trait  VectorToPoint {
     }
     res
   }
+
+  def enrichGivenBoardPieceAndPoint(board: Board, piece: Piece)(point: Point): List[Point] ={
+    val derivates: ListBuffer[Point] = ListBuffer()
+    piece.movAbilities.foreach(ma => {
+      val points = moves(board, point, ma)
+      derivates.appendAll(points)
+    })
+    derivates.toList
+  }
+
+
 
 }

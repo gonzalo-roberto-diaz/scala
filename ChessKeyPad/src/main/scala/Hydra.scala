@@ -13,7 +13,7 @@ case class Hydra[T](heads: List[T], tail: List[T]) {
     * @param withRepetition   whether or not repeated points values are allowed in a path
     * @return                 a list of derivate hydras
     */
-  def applyPoints(vectors: List[T], withRepetition: Boolean): List[Hydra[T]] = {
+  def applyPoints(vectors: List[T], withRepetition: Boolean = true): List[Hydra[T]] = {
     var addenda = vectors
     if (!withRepetition) {
       addenda = addenda diff heads

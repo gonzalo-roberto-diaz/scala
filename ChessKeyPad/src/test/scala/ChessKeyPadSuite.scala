@@ -18,7 +18,7 @@ class ChessKeyPadSuite extends FunSuite with PointOperations with KeyPadTrait{
 
   val lShapedBoard = Board(List(List("0 0"), List("0 -1"), List("0 -2", "1 -2")), List())
 
-  test("weird l-shaped baord isInside") {
+  test("weird l-shaped board isInside") {
     //out of bounds
     assert(!lShapedBoard.issInside(Point(2, -1)))
     assert(!lShapedBoard.issInside(Point(0, 5)))
@@ -48,8 +48,8 @@ class ChessKeyPadSuite extends FunSuite with PointOperations with KeyPadTrait{
   }
 
   test("points from a board") {
-    val twoXtwo = createCleanSquareBoard(2)
-    assert(twoXtwo.getPoints == List(Point(0, 0), Point(1, 0), Point(0, -1), Point(1, -1)))
+    val twoBytwo = createCleanSquareBoard(2)
+    assert(twoBytwo.getPoints == List(Point(0, 0), Point(1, 0), Point(0, -1), Point(1, -1)))
   }
 
   test("points from a board with forbidden values") {
@@ -72,7 +72,7 @@ class ChessKeyPadSuite extends FunSuite with PointOperations with KeyPadTrait{
     vec.toList
   }
 
-  test("knignt moves in clean 7x7 board") {
+  test("knight moves in clean 7x7 board") {
     val sevenBoard = Board(create7x7Board, List())
     val resMoves = moves(sevenBoard, Point(2, -2), knightMovAb)
     assert(resMoves.size == 8)
@@ -127,7 +127,7 @@ class ChessKeyPadSuite extends FunSuite with PointOperations with KeyPadTrait{
 
     val mhList = Hydra(List(a), Nil)
     val parentPoints = List(b, c)
-    val result = mhList.applyPoints(parentPoints, false)
+    val result = mhList.applyPoints(parentPoints, withRepetition = false)
     val r1 = Hydra(List(b, c), List(a))
     assert(result == List(r1))
   }
@@ -142,7 +142,7 @@ class ChessKeyPadSuite extends FunSuite with PointOperations with KeyPadTrait{
 
     val mhList = Hydra(List(a, b), List(c, d))
     val parentPoints = List(e, f)
-    val result = mhList.applyPoints(parentPoints, false)
+    val result = mhList.applyPoints(parentPoints, withRepetition = false)
     val r1 = Hydra(List(e, f), List(a, c, d))
     val r2 = Hydra(List(e, f), List(b, c, d))
     assert(result == List(r1, r2))
@@ -157,7 +157,7 @@ class ChessKeyPadSuite extends FunSuite with PointOperations with KeyPadTrait{
 
     val mhList = Hydra(List(a, b), List(c, d))
     val parentPoints = List(a, c, e)
-    val result = mhList.applyPoints(parentPoints, false)
+    val result = mhList.applyPoints(parentPoints, withRepetition = false)
     val r1 = Hydra(List(e), List(a, c, d))
     val r2 = Hydra(List(e), List(b, c, d))
     assert(result == List(r1, r2))
@@ -172,7 +172,7 @@ class ChessKeyPadSuite extends FunSuite with PointOperations with KeyPadTrait{
 
     val mhList = Hydra(List(a, b), List(c, d))
     val parentPoints = List(a, c, e)
-    val result = mhList.applyPoints(parentPoints, true)
+    val result = mhList.applyPoints(parentPoints, withRepetition = true)
     val r1 = Hydra(List(a, c, e), List(a, c, d))
     val r2 = Hydra(List(a, c, e), List(b, c, d))
     assert(result == List(r1, r2))
@@ -180,38 +180,28 @@ class ChessKeyPadSuite extends FunSuite with PointOperations with KeyPadTrait{
 
   test("process a hydra without repetitions") {
     val a = Point(0, 0)
-    val b = Point(1, 0)
     val c = Point(2, 0)
-    val d = Point(0, -1)
     val e = Point(1, -1)
-    val f = Point(2, -1)
     val g = Point(0, -2)
-    val h = Point(1, -2)
     val i = Point(2, -2)
 
-    val board = createCleanSquareBoard(3);
     val hydra = Hydra(List(a, c), List(e, g))
 
-    val res = hydra.process(bishopDerivator, false)
+    val res = hydra.process(bishopDerivator, withRepetition = false)
 
     assert(res == List(Hydra(List(i),List(a, e, g))))
   }
 
   test("process a hydra with repetitions") {
     val a = Point(0, 0)
-    val b = Point(1, 0)
     val c = Point(2, 0)
-    val d = Point(0, -1)
     val e = Point(1, -1)
-    val f = Point(2, -1)
     val g = Point(0, -2)
-    val h = Point(1, -2)
     val i = Point(2, -2)
 
-    val board = createCleanSquareBoard(3);
     val hydra = Hydra(List(a, c), List(e, g))
 
-    val res = hydra.process(bishopDerivator, true)
+    val res = hydra.process(bishopDerivator, withRepetition = true)
 
     assert(res == List(Hydra(List(e, i),List(a, e, g)), Hydra(List(e, g), List(c, e, g))))
   }
@@ -227,7 +217,7 @@ class ChessKeyPadSuite extends FunSuite with PointOperations with KeyPadTrait{
   test("point to string according to keypad") {
     val point = Point(1, -2)
     val s = pointStringifierByKeypad(point)
-    assert(s == "8") //the kepyad key label
+    assert(s == "8") //the keypad key label
   }
 
 
@@ -241,9 +231,8 @@ class ChessKeyPadSuite extends FunSuite with PointOperations with KeyPadTrait{
 
 
   test("paths length 3 for a knight in a keypad, without repetitions, starting at 0"){
-    val pointZero = Point(1, -3)
     val hydra = Hydra(List(kp0), Nil)
-    val pathsLength3 = hydra.repeatedlyProcess(knightDerivator, false, 3)
+    val pathsLength3 = hydra.repeatedlyProcess(knightDerivator, withRepetition = false, 3)
 
     assert(pathsLength3.size == 4)
     assert(pathsLength3.contains(Hydra(List(kp8), List(kp3, kp4, kp0))))
@@ -257,10 +246,10 @@ class ChessKeyPadSuite extends FunSuite with PointOperations with KeyPadTrait{
     var pieceHydras: List[Hydra[Point]] = Nil
     for (endPoint <- keyPad.getPoints){
       val endHydra = Hydra(List(endPoint), Nil)
-      pieceHydras = pieceHydras ::: endHydra.repeatedlyProcess(knightDerivator, true, 6);
+      pieceHydras = pieceHydras ::: endHydra.repeatedlyProcess(knightDerivator, withRepetition = true, 6)
     }
 
-    pieceHydras = pieceHydras.map(kh => Hydra(kh.heads diff List(kp0, kp1), kh.tail)).filter(h => !h.heads.isEmpty)
+    pieceHydras = pieceHydras.map(kh => Hydra(kh.heads diff List(kp0, kp1), kh.tail)).filter(h => h.heads.nonEmpty)
 
     // the number of paths is known to be 952
     assert(pieceHydras.map(kh => kh.heads.size).sum == 952)
@@ -273,10 +262,10 @@ class ChessKeyPadSuite extends FunSuite with PointOperations with KeyPadTrait{
     var pieceHydras: List[Hydra[Point]] = Nil
     for (endPoint <- keyPad.getPoints){
       val endHydra = Hydra(List(endPoint), Nil)
-      pieceHydras = pieceHydras ::: endHydra.repeatedlyProcess(bishopDerivator, true, 6);
+      pieceHydras = pieceHydras ::: endHydra.repeatedlyProcess(bishopDerivator, withRepetition = true, 6)
     }
 
-    pieceHydras = pieceHydras.map(kh => Hydra(kh.heads diff List(kp0, kp1), kh.tail)).filter(h => !h.heads.isEmpty)
+    pieceHydras = pieceHydras.map(kh => Hydra(kh.heads diff List(kp0, kp1), kh.tail)).filter(h => h.heads.nonEmpty)
 
     // the number of paths is known to be 2431
     assert(pieceHydras.map(kh => kh.heads.size).sum == 2341)
@@ -289,10 +278,10 @@ class ChessKeyPadSuite extends FunSuite with PointOperations with KeyPadTrait{
     var pieceHydras: List[Hydra[Point]] = Nil
     for (endPoint <- keyPad.getPoints){
       val endHydra = Hydra(List(endPoint), Nil)
-      pieceHydras = pieceHydras ::: endHydra.repeatedlyProcess(rookDerivator, true, 6);
+      pieceHydras = pieceHydras ::: endHydra.repeatedlyProcess(rookDerivator, withRepetition = true, 6)
     }
 
-    pieceHydras = pieceHydras.map(kh => Hydra(kh.heads diff List(kp0, kp1), kh.tail)).filter(h => !h.heads.isEmpty)
+    pieceHydras = pieceHydras.map(kh => Hydra(kh.heads diff List(kp0, kp1), kh.tail)).filter(h => h.heads.nonEmpty)
 
     // the number of paths is known to be 49362
     assert(pieceHydras.map(kh => kh.heads.size).sum == 49326)
@@ -304,10 +293,10 @@ class ChessKeyPadSuite extends FunSuite with PointOperations with KeyPadTrait{
     var pieceHydras: List[Hydra[Point]] = Nil
     for (endPoint <- keyPad.getPoints){
       val endHydra = Hydra(List(endPoint), Nil)
-      pieceHydras = pieceHydras ::: endHydra.repeatedlyProcess(queenDerivator, true, 6);
+      pieceHydras = pieceHydras ::: endHydra.repeatedlyProcess(queenDerivator, withRepetition = true, 6)
     }
 
-    pieceHydras = pieceHydras.map(kh => Hydra(kh.heads diff List(kp0, kp1), kh.tail)).filter(h => !h.heads.isEmpty)
+    pieceHydras = pieceHydras.map(kh => Hydra(kh.heads diff List(kp0, kp1), kh.tail)).filter(h => h.heads.nonEmpty)
 
     // the number of paths is known to be 751503
     assert(pieceHydras.map(kh => kh.heads.size).sum == 751503)
@@ -319,10 +308,10 @@ class ChessKeyPadSuite extends FunSuite with PointOperations with KeyPadTrait{
     var pieceHydras: List[Hydra[Point]] = Nil
     for (endPoint <- keyPad.getPoints){
       val endHydra = Hydra(List(endPoint), Nil)
-      pieceHydras = pieceHydras ::: endHydra.repeatedlyProcess(peonDerivator, true, 6);
+      pieceHydras = pieceHydras ::: endHydra.repeatedlyProcess(peonDerivator, withRepetition = true, 6)
     }
 
-    pieceHydras = pieceHydras.map(kh => Hydra(kh.heads diff List(kp0, kp1), kh.tail)).filter(h => !h.heads.isEmpty)
+    pieceHydras = pieceHydras.map(kh => Hydra(kh.heads diff List(kp0, kp1), kh.tail)).filter(h => h.heads.nonEmpty)
 
     // the number of paths is known to be 0
     assert(pieceHydras.map(kh => kh.heads.size).sum == 0)
@@ -334,10 +323,10 @@ class ChessKeyPadSuite extends FunSuite with PointOperations with KeyPadTrait{
     var pieceHydras: List[Hydra[Point]] = Nil
     for (endPoint <- keyPad.getPoints){
       val endHydra = Hydra(List(endPoint), Nil)
-      pieceHydras = pieceHydras ::: endHydra.repeatedlyProcess(kingDerivator, true, 6);
+      pieceHydras = pieceHydras ::: endHydra.repeatedlyProcess(kingDerivator, withRepetition = true, 6)
     }
 
-    pieceHydras = pieceHydras.map(kh => Hydra(kh.heads diff List(kp0, kp1), kh.tail)).filter(h => !h.heads.isEmpty)
+    pieceHydras = pieceHydras.map(kh => Hydra(kh.heads diff List(kp0, kp1), kh.tail)).filter(h => h.heads.nonEmpty)
 
     // the number of paths is known to be 124908
     assert(pieceHydras.map(kh => kh.heads.size).sum == 124908)

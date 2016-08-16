@@ -1,3 +1,4 @@
+import scala.collection.mutable.Map
 
 /**
   * resources that are specific not only to the game of chess, but to the quiz
@@ -37,12 +38,40 @@ trait KeyPadTrait extends ChessSpecific{
     piece.getSources(board, origin)
   }
 
-  def knightDerivator = pointDerivatorByBoardPieceAndPoint(keyPad, knight)(_)
-  def bishopDerivator = pointDerivatorByBoardPieceAndPoint(keyPad, bishop)(_)
-  def rookDerivator = pointDerivatorByBoardPieceAndPoint(keyPad, rook)(_)
-  def peonDerivator = pointDerivatorByBoardPieceAndPoint(keyPad, peon)(_)
-  def kingDerivator = pointDerivatorByBoardPieceAndPoint(keyPad, king)(_)
-  def queenDerivator = pointDerivatorByBoardPieceAndPoint(keyPad, queen)(_)
+  def uncachedKnightDerivator = pointDerivatorByBoardPieceAndPoint(keyPad, knight)(_)
+  def uncachedBishopDerivator = pointDerivatorByBoardPieceAndPoint(keyPad, bishop)(_)
+  def uncachedRookDerivator = pointDerivatorByBoardPieceAndPoint(keyPad, rook)(_)
+  def uncachedPeonDerivator = pointDerivatorByBoardPieceAndPoint(keyPad, peon)(_)
+  def uncachedKingDerivator = pointDerivatorByBoardPieceAndPoint(keyPad, king)(_)
+  def uncachedQueenDerivator = pointDerivatorByBoardPieceAndPoint(keyPad, queen)(_)
+
+  //cached versions of the derivated functions
+  //(they are nor really necessary), but slightly speed up the tests
+  val knightCache: Map[Point, List[Point]] = Map()
+  val bishopCache: Map[Point, List[Point]] = Map()
+  val rookCache: Map[Point, List[Point]] = Map()
+  val peonCache: Map[Point, List[Point]] = Map()
+  val kingCache: Map[Point, List[Point]] = Map()
+  val queenCache: Map[Point, List[Point]] = Map()
+
+
+  def cachedPointDerivatorByBoardPieceAndPoint(cache: Map[Point, List[Point]], board: Board, piece: Piece) (origin: Point): List[Point] = {
+    if (cache.contains(origin)) cache.get(origin).get
+    else{
+      val sources = piece.getSources(board, origin)
+      cache.put(origin, sources)
+      sources
+    }
+  }
+
+  def knightDerivator = cachedPointDerivatorByBoardPieceAndPoint(knightCache, keyPad, knight)(_)
+  def bishopDerivator = cachedPointDerivatorByBoardPieceAndPoint(bishopCache, keyPad, bishop)(_)
+  def rookDerivator = cachedPointDerivatorByBoardPieceAndPoint(rookCache, keyPad, rook)(_)
+  def peonDerivator = cachedPointDerivatorByBoardPieceAndPoint(peonCache, keyPad, peon)(_)
+  def kingDerivator = cachedPointDerivatorByBoardPieceAndPoint(kingCache, keyPad, king)(_)
+  def queenDerivator = cachedPointDerivatorByBoardPieceAndPoint(queenCache, keyPad, queen)(_)
+
+
 
 
 }

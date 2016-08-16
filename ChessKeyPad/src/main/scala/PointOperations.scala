@@ -2,7 +2,7 @@ import scala.collection.mutable.ListBuffer
 
 /**
   * This trait includes some vector and point operations that don't really belong to any specific class in terms of
-  * "compilation unit", and whcih I want to test independently.
+  * "compilation unit", and which I want to test independently.
   */
 trait  PointOperations {
 
@@ -12,13 +12,13 @@ trait  PointOperations {
   def applyVectorToPoint(board: Board, origin: Point, vector: Move, repeatable: Boolean): List[Point] = {
 
     def recursiveApplication(board: Board, origin: Point, vector: Move): List[Point] = {
-      val endPosition = origin + vector;
+      val endPosition = origin + vector
       if (!board.issInside(endPosition)) Nil
       else endPosition :: recursiveApplication(board, endPosition, vector)
     }
 
     if (!repeatable) {
-      val endPosition = origin + vector;
+      val endPosition = origin + vector
       if (!board.issInside(endPosition)) Nil
       else List(endPosition)
     } else {
@@ -28,7 +28,7 @@ trait  PointOperations {
 
   def moves(board: Board, origin: Point, movAbility: MovAbility): List[Point] = {
 
-    var vectors = List(movAbility.vector);
+    var vectors = List(movAbility.vector)
     if (movAbility.coordFlip) vectors = vectors ::: vectors.map(vec => vec.flipCoords)
     if (movAbility.mirrorX) vectors = vectors ::: vectors.map(vec => vec.mirrorX)
     if (movAbility.mirrorY) vectors = vectors ::: vectors.map(vec => vec.mirrorY)

@@ -1,5 +1,5 @@
 /**
-  * Created by gonzalodiaz on 8/14/16.
+  * A generic bi-dimensional Point class, with some common operations
   */
 case class Point(x: Int, y: Int) extends Ordered[Point]{
   def +(move: Point): Point = Point(move.x + x, move.y + y)

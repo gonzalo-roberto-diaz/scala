@@ -10,7 +10,7 @@ trait ChessSpecific {
   val bishopMovAb = MovAbility(Point(1, 1), repeatable = true, mirrorX = true, mirrorY = true)
   val unaryRookMovAb = MovAbility(Point(0, 1), coordFlip = true, centralSym = true)
   val unaryBishopMovAb = MovAbility(Point(1, 1), mirrorX = true, mirrorY = true)
-  val knightMovAb = MovAbility(Point(1, 2), false, true, true, false, true)
+  val knightMovAb = MovAbility(Point(1, 2), coordFlip =  true, mirrorX =  true, centralSym =  true)
   val normalPeonMovAb = MovAbility(Point(0, -1))
   val eatingPeonMovAb = MovAbility(Point(1, -1), mirrorY = true)
 
